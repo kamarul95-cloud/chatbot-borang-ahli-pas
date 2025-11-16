@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale-1.0">
 <title>Pendaftaran Ahli - Chatbot</title>
 <style>
 /* --- GAYA CSS FINAL (Replika Hampir 100% Flowdeck/WhatsApp) --- */
@@ -292,7 +292,7 @@ let userData = {
 'email': '(Tiada)',
 'kelulusan': '',
 'kelulusan_lain_teks': '',
-'bidang_pengajian': '(Tiada)',
+'bidang_pengajian': '(Tiada)', // <<< INI YANG KITA NAK ISI
 'pekerjaan': '',
 'bidang_pekerjaan': '',
 'bayaran': [],
@@ -358,13 +358,9 @@ const fd = new FormData();
 for (const key in userData) {
     if (key === 'bayaran') {
         // Diuruskan selepas loop
-    
-    // === INJECT DEBUG FIX: 'poskod' DIKELUARKAN DARI BLOK INI ===
     } else if (key === 'tel_bimbit' || key === 'ic_baru' || key === 'ic_lama') {
-    // === AKHIR FIX ===
         fd.append(key, "'" + userData[key]); // Format Teks
     } else {
-        // 'poskod' kini akan jatuh ke blok 'else' ini dan dihantar sebagai data biasa
         fd.append(key, userData[key]);
     }
 }
@@ -503,14 +499,24 @@ document.getElementById('tel_bimbit_input').focus();
 break;
 
 case 10:
+// === INJECT DEBUG FIX: LOGIK 'KELULUSAN' ===
 await addMessage('11. **Kelulusan** tertinggi.', 'bot-message');
 inputArea.innerHTML = `
-<button class="choice-button" onclick="submitChoice('kelulusan', 'Universiti')">Universiti / Kolej</button>
+<button class="choice-button" onclick="submitKelulusanUniversiti()">Universiti / Kolej</button>
 <button class="choice-button" onclick="handleKelulusanLain()">Lain-lain (Nyatakan)</button>
 `;
 break;
 
-case 11:
+case 11: // STEP BARU
+await addMessage('Sila nyatakan **Bidang Pengajian** anda (cth: Kejuruteraan Awam, Perakaunan).', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="bidang_pengajian_input" placeholder="Bidang Pengajian..." class="form-input">
+<button onclick="submitBidangPengajian()" class="send-button-wa">➤</button>
+`;
+document.getElementById('bidang_pengajian_input').focus();
+break;
+
+case 12: // (Dulu 11)
 await addMessage('Sila nyatakan kelulusan lain-lain anda (cth: SPM, STPM, Diploma).', 'bot-message');
 inputArea.innerHTML = `
 <input type="text" id="kelulusan_lain_input" placeholder="Nyatakan kelulusan..." class="form-input">
@@ -518,8 +524,9 @@ inputArea.innerHTML = `
 `;
 document.getElementById('kelulusan_lain_input').focus();
 break;
+// === AKHIR FIX ===
 
-case 12:
+case 13: // (Dulu 12)
 await addMessage('12. **Pekerjaan**.', 'bot-message');
 inputArea.innerHTML = `
 <button class="choice-button" onclick="submitChoice('pekerjaan', 'Kerajaan')">Kerajaan</button>
@@ -529,7 +536,7 @@ inputArea.innerHTML = `
 `;
 break;
 
-case 13:
+case 14: // (Dulu 13)
 await addMessage('13. Sila nyatakan **Bidang Pekerjaan** anda.', 'bot-message');
 await addMessage('(Contoh: Guru, Jurutera IT, Peniaga, Pelajar)', 'bot-message');
 inputArea.innerHTML = `
@@ -539,7 +546,7 @@ inputArea.innerHTML = `
 document.getElementById('bidang_pekerjaan_input').focus();
 break;
 
-case 14:
+case 15: // (Dulu 14)
 await addMessage('**Bahagian B: Bayaran**\n\nSila pilih jenis bayaran. Anda boleh pilih lebih dari satu.', 'bot-message');
 await addMessage('1. Pendaftaran: RM 2.00 (Wajib)\n2. Yuran: Tahunan (RM 3.00) ATAU Sekaligus (RM 100.00)\n3. Kad Ahli: RM 5.00 (Pilihan)', 'bot-message');
 tempBayaran = [];
@@ -552,7 +559,7 @@ inputArea.innerHTML = `
 `;
 break;
 
-case 15:
+case 16: // (Dulu 15)
 await addMessage('**Bahagian C: Pengakuan Pemohon**\n\nSila baca dan setuju dengan pernyataan di bawah:', 'bot-message');
 await addMessage('*"Saya mengaku kebenaran dasar PAS dan akan berusaha melaksanakan segala tuntutannya. Saya menerima PERLEMBAGAAN PAS sebagai panduan dan mengaku akan taat dan patuh kepada kepimpinan parti serta akan patuh dalam melaksanakan arahan-arahan dan keputusan-keputusan parti dari masa ke semasa."*', 'bot-message');
 inputArea.innerHTML = `
@@ -561,7 +568,7 @@ inputArea.innerHTML = `
 `;
 break;
 
-case 16:
+case 17: // (Dulu 16)
 await addMessage('14. Sila dapatkan **Pautan Tandatangan Digital** anda.', 'bot-message');
 await addMessage('Sila guna aplikasi di bawah untuk tanda tangan & dapatkan URL:\n\n<a href="https://tanda-tangan-by-kamarul.netlify.app/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">✍️ Klik Sini: Pad Tandatangan Digital</a>', 'bot-message');
 await addMessage('Selepas dapat URL, sila **tampal (paste)** pautan itu di ruangan bawah.', 'bot-message');
@@ -572,8 +579,9 @@ inputArea.innerHTML = `
 document.getElementById('disahkan_input').focus();
 break;
 
-case 17:
+case 18: // (Dulu 17)
 await addMessage('**PENGESAHAN AKHIR**\n\nSila semak butiran anda sebelum hantar:', 'bot-message');
+// === INJECT DEBUG FIX: KEMAS KINI 'SUMMARY' ===
 let summary = `
 **Nama Jawi**: ${userData.nama_jawi}
 **Nama Rumi**: ${userData.nama_rumi}
@@ -582,13 +590,15 @@ let summary = `
 **Jantina**: ${userData.jantina}
 **Telefon**: ${userData.tel_bimbit}
 **Alamat**: ${userData.alamat}, ${userData.poskod} ${userData.bandar}
-**Kelulusan**: ${userData.kelulusan === 'Lain-lain' ? userData.kelulusan_lain_teks : userData.kelulusan}
+**Kelulusan**: ${userData.kelulusan === 'Lain-lain' ? `Lain-lain (${userData.kelulusan_lain_teks})` : userData.kelulusan}
+${userData.kelulusan === 'Universiti' ? `**Bidang Pengajian**: ${userData.bidang_pengajian || '(Tidak dinyatakan)'}\n` : ''}
 **Pekerjaan**: ${userData.pekerjaan}
-**Bidang**: ${userData.bidang_pekerjaan || '(Tidak dinyatakan)'}
+**Bidang Pekerjaan**: ${userData.bidang_pekerjaan || '(Tidak dinyatakan)'}
 **Bayaran**: ${userData.bayaran.join(', ') || '(Belum dipilih)'}
 **Pautan IC**: ${userData.ic_url ? `<a href="${userData.ic_url}" target="_blank">Lihat Pautan</a>` : 'Belum diisi'}
 **Pautan T/T**: ${userData.disahkan ? `<a href="${userData.disahkan}" target="_blank">Lihat Pautan</a>` : 'Belum diisi'}
 `;
+// === AKHIR FIX ===
 await addMessage(summary, 'bot-message');
 await addMessage('Adakah semua maklumat ini **BETUL**?', 'bot-message');
 inputArea.innerHTML = `
@@ -597,7 +607,7 @@ inputArea.innerHTML = `
 `;
 break;
 
-case 18:
+case 19: // (Dulu 18)
 await addMessage('✅ **Borang Berjaya Diisi!**', 'bot-message');
 await addMessage('Terima kasih.', 'bot-message');
 await addMessage('Sila jemput ahli keluarga dan rakan-rakan bersama menjadi ahli PAS.', 'bot-message');
@@ -672,11 +682,20 @@ step++;
 runChatFlow();
 }
 
+// === INJECT DEBUG FIX: FUNGSI 'KELULUSAN' BARU ===
+function submitKelulusanUniversiti() {
+    if (isProcessing) return;
+    addMessage('Universiti / Kolej', 'user-message', 10);
+    userData['kelulusan'] = 'Universiti';
+    step = 11; // Lompat ke step BARU (Bidang Pengajian)
+    runChatFlow();
+}
+
 function handleKelulusanLain() {
 if (isProcessing) return;
 addMessage('Lain-lain (Nyatakan)', 'user-message', 10);
 userData['kelulusan'] = 'Lain-lain';
-step = 11;
+step = 12; // Lompat ke step 12 (input kelulusan lain)
 runChatFlow();
 }
 
@@ -688,9 +707,22 @@ if (!value) { alert('Sila nyatakan kelulusan anda.'); input.focus(); return; }
 
 userData['kelulusan_lain_teks'] = value;
 addMessage(value, 'user-message', 10);
-step = 12;
+step = 13; // Lompat ke step 13 (pekerjaan)
 runChatFlow();
 }
+
+function submitBidangPengajian() {
+    if (isProcessing) return;
+    const input = document.getElementById('bidang_pengajian_input');
+    const value = input.value.trim();
+    if (!value) { alert('Sila nyatakan bidang pengajian anda.'); input.focus(); return; }
+
+    userData['bidang_pengajian'] = value;
+    addMessage(value, 'user-message', 10);
+    step = 13; // Lompat ke 'Pekerjaan' (step 13)
+    runChatFlow();
+}
+// === AKHIR FIX ===
 
 // Fungsi Bahagian B (Bayaran)
 function toggleBayaran(value, buttonId, group = null) {
@@ -760,7 +792,7 @@ const success = await sendDataToSheet();
 hideTypingIndicator();
 
 if (success) {
-step = 18;
+step = 19; // (Dulu 18)
 isProcessing = false;
 runChatFlow();
 } else {
@@ -802,7 +834,7 @@ userData = {
 'email': '(Tiada)',
 'kelulusan': '',
 'kelulusan_lain_teks': '',
-'bidang_pengajian': '(Tiada)',
+'bidang_pengajian': '(Tiada)', // <<< Pastikan ini di-reset
 'pekerjaan': '',
 'bidang_pekerjaan': '',
 'bayaran': [],
