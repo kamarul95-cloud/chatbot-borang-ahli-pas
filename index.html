@@ -126,7 +126,6 @@ border-top: 1px solid #eee;
 align-items: flex-end;
 }
 
-/* === INJECT FIX 1: CSS 'TYPING' BUBBLE BARU === */
 .typing-bubble {
     background-color: #ffffff; /* Warna bubble bot */
     margin-right: auto;
@@ -140,7 +139,26 @@ align-items: flex-end;
     align-items: center;
     box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
 }
-/* === AKHIR FIX 1 === */
+
+/* === INJECT FIX 3: GAYA 'KREDIT' BARU === */
+.credit-message {
+    background-color: transparent;
+    box-shadow: none;
+    /* Letak di tengah */
+    margin: 15px auto 10px auto; /* auto left/right centers it */
+    text-align: center;
+    /* Gaya teks */
+    font-size: 0.8em;
+    color: #555;
+    font-style: italic;
+    /* Boleh tambah border jika mahu */
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 10px;
+    max-width: 80%; /* Biar nampak kemas */
+    /* 'max-width' pada .message tidak terpakai sebab kita tak guna class .message */
+}
+/* === AKHIR FIX 3 === */
 
 
 .dot {
@@ -294,42 +312,45 @@ let tempBayaran = [];
 
 const chatBox = document.getElementById('chat-box');
 const inputArea = document.getElementById('input-area');
-// const typingIndicator = document.getElementById('typing-indicator'); // Tidak relevan lagi
 
 // ** FUNGSI BANTUAN (KEKALKAN) **
 
-// === INJECT FIX 1: FUNGSI 'TYPING' BARU ===
 function showTypingIndicator() {
-    // Cipta bubble baru
     const typingDiv = document.createElement('div');
-    typingDiv.id = 'temp-typing-bubble'; // Bagi ID untuk dibuang nanti
-    typingDiv.classList.add('typing-bubble'); // Guna CSS baru
+    typingDiv.id = 'temp-typing-bubble';
+    typingDiv.classList.add('typing-bubble');
     typingDiv.innerHTML = `
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
     `;
-    chatBox.appendChild(typingDiv); // Masukkan dalam chat-box
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function hideTypingIndicator() {
     const typingDiv = document.getElementById('temp-typing-bubble');
     if (typingDiv) {
-        typingDiv.remove(); // Buang bubble dari chat-box
+        typingDiv.remove();
     }
 }
-// === AKHIR FIX 1 ===
 
-
-function addMessage(text, type, delay = 500) {
+// === INJECT FIX 3: FUNGSI 'addMessage' DIUBAH SUAI ===
+function addMessage(text, typeOrClass, delay = 500) {
 return new Promise(resolve => {
 setTimeout(() => {
 const formattedText = text
 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 .replace(/\n/g, '<br>');
 const msgDiv = document.createElement('div');
-msgDiv.classList.add('message', type);
+
+// Tambah kelas 'message' hanya jika ia bubble biasa
+if (typeOrClass === 'bot-message' || typeOrClass === 'user-message') {
+    msgDiv.classList.add('message');
+}
+// Tambah apa jua kelas yang diberi (cth: bot-message, user-message, ATAU credit-message)
+msgDiv.classList.add(typeOrClass); 
+
 msgDiv.innerHTML = formattedText;
 chatBox.appendChild(msgDiv);
 chatBox.scrollTop = chatBox.scrollHeight;
@@ -337,6 +358,7 @@ resolve();
 }, delay);
 });
 }
+// === AKHIR FIX 3 ===
 
 // ** FUNGSI INTEGRASI (DIUBAH SUAI) **
 
@@ -356,9 +378,6 @@ for (const key in userData) {
 
 const bayaranString = userData.bayaran.join(', ');
 fd.append('bayaran[]', bayaranString);
-
-// === INJECT FIX 2: LOGIK FALLBACK 'nama_jawi' DIBUANG ===
-// (Tiada lagi 'if' block untuk 'nama_jawi' di sini)
 
 try {
 const response = await fetch(GOOGLE_SHEET_URL, {
@@ -390,9 +409,9 @@ isProcessing = true;
 inputArea.innerHTML = '';
 
 if (step > 0) {
-showTypingIndicator(); // Panggil fungsi baru
+showTypingIndicator();
 await new Promise(r => setTimeout(r, 1200));
-hideTypingIndicator(); // Panggil fungsi baru
+hideTypingIndicator();
 }
 
 switch (step) {
@@ -401,7 +420,6 @@ await addMessage('Assalamualaikum! Selamat datang ke borang pendaftaran ahli ver
 await addMessage('Saya akan bantu anda isi borang ini satu per satu.', 'bot-message');
 await addMessage('**Bahagian A: Butir Diri**\n\n1. Sila masukkan **Nama Penuh (Tulisan Jawi)**.', 'bot-message');
 await addMessage('Guna pautan ini untuk tukar Rumi ke Jawi:\n<a href="https://ejawimakmur.my/" target="_blank" rel="noopener noreferrer">➡️ Klik Sini: eJawiMakmur.my</a>', 'bot-message');
-// === INJECT FIX 2: BUTANG 'LANGKAU' DIBUANG ===
 inputArea.innerHTML = `
 <input type="text" id="nama_jawi_input" placeholder="Nama Jawi..." class="form-input">
 <button onclick="submitText('nama_jawi', 'nama_jawi_input')" class="send-button-wa">➤</button>
@@ -445,9 +463,11 @@ inputArea.innerHTML = `
 break;
 
 case 5:
+// === INJECT FIX 1: LINK SCANNER V2 BARU ===
 await addMessage('6. Sila dapatkan **Pautan Gambar IC** anda.', 'bot-message');
-await addMessage('Sila guna aplikasi pengimbas IC di bawah untuk ambil gambar & dapatkan URL:\n\n<a href="https://scanner-no-kp-by-kamarul.netlify.app/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">📸 Klik Sini: Pengimbas IC & Upload</a>', 'bot-message');
+await addMessage('Sila guna aplikasi pengimbas IC di bawah untuk ambil gambar & dapatkan URL:\n\n<a href="https://kamarul95-cloud.github.io/scanner-no-kp-v2/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">📸 Klik Sini: Pengimbas IC & Upload (V2)</a>', 'bot-message');
 await addMessage('Selepas dapat URL, sila **tampal (paste)** pautan itu di ruangan bawah.', 'bot-message');
+// === AKHIR FIX 1 ===
 inputArea.innerHTML = `
 <input type="text" id="ic_url_input" placeholder="Tampal URL dari pengimbas di sini..." class="form-input">
 <button onclick="submitText('ic_url', 'ic_url_input')" class="send-button-wa">➤</button>
@@ -590,7 +610,9 @@ case 18:
 await addMessage('✅ **Borang Berjaya Diisi!**', 'bot-message');
 await addMessage('Terima kasih.', 'bot-message');
 await addMessage('Sila jemput ahli keluarga dan rakan-rakan bersama menjadi ahli PAS.', 'bot-message');
-await addMessage('Dibina oleh Qamarul.', 'bot-message');
+// === INJECT FIX 3: Mesej Kredit Khas ===
+await addMessage('Dibina oleh Qamarul', 'credit-message', 1000); 
+// === AKHIR FIX 3 ===
 inputArea.innerHTML = `
 <button class="choice-button" onclick="confirmPendaftaran(false)">Isi Borang Baru</button>
 `;
@@ -606,14 +628,11 @@ if (isProcessing) return;
 const input = document.getElementById(inputId);
 const value = input.value.trim();
 
-// === INJECT FIX 2: Validasi 'nama_jawi' ===
 if (!value) {
     alert('Sila isi ruangan ini. Ia wajib diisi.');
     input.focus();
     return;
 }
-// === AKHIR FIX 2 ===
-
 if (key === 'ic_baru' && !/^[0-9]{6}-?[0-9]{2}-?[0-9]{4}$/.test(value)) {
     alert('Sila masukkan format No. KP yang betul (cth: 900101-11-5555 atau 900101115555)');
     input.focus();
@@ -649,7 +668,7 @@ function submitChoice(key, value) {
 if (isProcessing) return;
 
 userData[key] = value;
-addMessage(value, 'user-message', 10); // Logik 'skip' dibuang
+addMessage(value, 'user-message', 10);
 
 if (key === 'pengakuan' && value === 'Tidak setuju') {
 addMessage('Anda mesti bersetuju dengan pengakuan untuk meneruskan pendaftaran.', 'bot-message').then(() => {
@@ -752,9 +771,9 @@ const success = await sendDataToSheet();
 hideTypingIndicator();
 
 if (success) {
-step = 18; // Pergi ke skrin 'Selesai'
-isProcessing = false; // <-- INI KUNCI DIA, LEPAS 'LOCK'
-runChatFlow(); // Panggil runChatFlow untuk tunjuk 'case 18'
+step = 18;
+isProcessing = false; // KUNCI
+runChatFlow();
 } else {
 addMessage('Maaf, penghantaran gagal. Sila cuba lagi.', 'bot-message');
 isProcessing = false;
@@ -812,4 +831,4 @@ runChatFlow();
 </script>
 
 </body>
-</html>-----
+</html>
