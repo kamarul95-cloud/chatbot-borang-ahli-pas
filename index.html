@@ -1,812 +1,815 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Borang Pendaftaran (Versi Manual)</title>
-  <style>
-    /* === Font & Body === */
-    @import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran Ahli - Chatbot</title>
+<style>
+/* --- GAYA CSS FINAL (Replika Hampir 100% Flowdeck/WhatsApp) --- */
+body {
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+background-color: #ECE5DD;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: flex-end;
+min-height: 100vh;
+}
 
-    :root {
-      /* Warna tema diinspirasikan dari borang fizikal */
-      --c-primary: #006400; /* Hijau Gelap */
-      --c-bg-header: #e0f0e0; /* Hijau Pucuk Pisang */
-      --c-border: #888;
-      --c-bg-light: #e9e9e9; /* Latar belakang 'luar kertas' */
-      --c-text: #000;
-      --c-text-label: #333;
-      --c-text-help: #555;
-    }
+.chat-container {
+width: 100%;
+max-width: 600px;
+height: 100vh;
+background-color: #ffffff;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+position: relative;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--c-bg-light);
-      color: var(--c-text);
-      padding: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      font-size: 14px;
-    }
+.chat-header {
+background-color: #006400; /* Warna Tema PAS (Hijau Gelap) */
+color: white;
+padding: 10px 15px;
+font-size: 1.1em;
+display: flex;
+align-items: center;
+box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+z-index: 10;
+}
 
-    /* === Kontena Utama (Kertas) === */
-    .container {
-      width: 100%;
-      max-width: 850px;
-      background: #ffffff;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border: 1px solid #333;
-      overflow: hidden;
-    }
-    
-    /* === Header Gambar === */
-    .form-header-image {
-      padding: 0;
-      border-bottom: 2px solid #000;
-      background-color: #fff;
-      text-align: center;
-      line-height: 0;
-    }
-    .form-header-image img {
-      width: 100%;
-      max-width: 100%;
-      display: block;
-    }
-    
-    form {
-      padding: 24px;
-    }
+.chat-header .profile-pic-placeholder {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background-color: #eee;
+margin-right: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
 
-    /* === 'Fieldset' & 'Legend' === */
-    fieldset {
-      border: 1px solid #000;
-      padding: 0;
-      margin: 0;
-      margin-bottom: 24px;
-    }
+.chat-header h2 {
+margin: 0;
+font-size: 1em;
+}
 
-    legend {
-      padding: 6px 12px;
-      font-size: 1em;
-      font-weight: 700;
-      color: white;
-      background: var(--c-primary);
-      margin-left: 16px;
-      width: auto;
-    }
+.chat-header .status {
+font-size: 0.7em;
+color: #c8e6c9; /* Warna status diubah suai */
+margin-top: 2px;
+}
 
-    /* === Kumpulan Borang === */
-    .form-section {
-      padding: 16px;
-    }
-    
-    .form-group {
-      margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-    }
+.chat-box {
+padding: 10px;
+overflow-y: auto;
+flex-grow: 1;
+background-color: #E6DDD5;
+background-image: url('https://raw.githubusercontent.com/kamarul95-cloud/qrcode/refs/heads/main/IMG-20251111-WA0000.jpg');
+background-repeat: no-repeat;
+background-size: cover;
+background-position: center;
+background-attachment: scroll;
+display: flex;
+flex-direction: column;
+}
 
-    .form-group label {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 600;
-      font-size: 0.9em;
-      color: var(--c-text-label);
-    }
+.message {
+max-width: 75%;
+padding: 6px 9px 8px 9px;
+border-radius: 8px;
+margin-bottom: 5px;
+word-wrap: break-word;
+clear: both;
+box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+line-height: 1.35;
+position: relative;
+font-size: 0.95em;
+}
 
-    .form-group input[type="text"],
-    .form-group input[type="date"],
-    .form-group input[type="email"],
-    .form-group input[type="url"], /* Input URL ditambah */
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid var(--c-border);
-      border-radius: 0;
-      box-sizing: border-box;
-      font-size: 1em;
-      font-family: Arial, sans-serif;
-      background: var(--c-bg-header);
-    }
-    
-    .form-group textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+.bot-message {
+background-color: #ffffff;
+margin-right: auto;
+margin-left: 2px;
+border-top-left-radius: 0;
+}
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      border-color: var(--c-primary);
-      box-shadow: 0 0 0 2px rgba(0, 100, 0, 0.1);
-      outline: none;
-      background: #fff;
-    }
-    
-    /* Input 'Lain-lain' */
-    .lain-lain-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .lain-lain-group .choice-item {
-      flex-shrink: 0;
-    }
-    .lain-lain-group input[type="text"] {
-      flex-grow: 1;
-    }
+.user-message {
+background-color: #DCF8C6;
+margin-left: auto;
+margin-right: 2px;
+border-top-right-radius: 0;
+text-align: left;
+}
 
-    /* === Pilihan (Radio & Checkbox) === */
-    .choice-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 4px;
-    }
-    
-    .choice-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .choice-item input[type="radio"],
-    .choice-item input[type="checkbox"] {
-      width: 1.2em;
-      height: 1.2em;
-      flex-shrink: 0;
-      cursor: pointer;
-      accent-color: var(--c-primary);
-    }
-    
-    .choice-item label {
-      margin: 0;
-      font-weight: 400;
-      color: var(--c-text);
-      cursor: pointer;
-    }
+.bot-message img {
+max-width: 100%;
+height: auto;
+border-radius: 5px;
+margin-top: 5px;
+}
+.bot-message a {
+    color: #006400;
+    font-weight: 600;
+    text-decoration: underline;
+}
 
-    /* === Teks Bantuan === */
-    .help-text {
-      font-size: 0.85em;
-      color: var(--c-text-help);
-      margin-top: 4px;
-      line-height: 1.4;
-      background: var(--c-bg-header);
-      padding: 8px;
-      border: 1px dashed var(--c-border);
-    }
-    
-    .help-text-white {
-      background: #fff !important;
-      border-style: solid;
-    }
-    
-    .help-text a {
-      color: var(--c-primary);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .help-text a:hover {
-      text-decoration: underline;
-    }
+.input-area {
+padding: 8px;
+background-color: #f0f0f0;
+display: flex;
+flex-wrap: wrap;
+gap: 5px;
+border-top: 1px solid #eee;
+align-items: flex-end;
+}
 
-    /* === Layout Grid === */
-    .grid-row {
-      display: grid;
-      gap: 16px;
-      margin-bottom: 12px;
-    }
-    .grid-col-2 { grid-template-columns: 1fr 1fr; }
-    .grid-col-3 { grid-template-columns: 1fr 1fr 1fr; }
+/* === INJECT FIX 1: CSS 'TYPING' BUBBLE BARU === */
+.typing-bubble {
+    background-color: #ffffff; /* Warna bubble bot */
+    margin-right: auto;
+    margin-left: 2px;
+    margin-bottom: 5px;
+    border-top-left-radius: 0; /* Ekor */
+    border-radius: 8px;
+    padding: 9px 12px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
+/* === AKHIR FIX 1 === */
 
-    @media (max-width: 700px) {
-      .grid-col-2,
-      .grid-col-3 {
-        grid-template-columns: 1fr;
-        margin-bottom: 0;
-      }
-      .grid-row { margin-bottom: 0; }
-      .form-group { margin-bottom: 12px; }
-      .lain-lain-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .lain-lain-group input[type="text"] { width: 100%; }
-    }
 
-    /* === Butang Hantar === */
-    .submit-button {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--c-primary);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 1.2em;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      margin-top: 16px;
-    }
-    .submit-button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    
-    fieldset:disabled {
-      background: #f7f7f7;
-      opacity: 0.8;
-    }
-    fieldset:disabled legend { background: #777; }
+.dot {
+height: 6px;
+width: 6px;
+background-color: #555;
+border-radius: 50%;
+display: inline-block;
+margin-left: 2px;
+animation: bounce 1.2s infinite ease-in-out;
+}
 
-    /* === MODAL POPUP (SUCCESS) === */
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; 
-      z-index: 1000; 
-      left: 0;
-      top: 0;
-      width: 100%; 
-      height: 100%; 
-      overflow: auto; 
-      background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-      justify-content: center;
-      align-items: center;
-    }
+.dot:nth-child(2) { animation-delay: 0.4s; }
+.dot:nth-child(3) { animation-delay: 0.8s; }
 
-    .modal-content {
-      background-color: #fefefe;
-      margin: auto;
-      padding: 30px;
-      border: 1px solid #888;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      position: relative;
-    }
+@keyframes bounce {
+0%, 80%, 100% { transform: translateY(0); }
+40% { transform: translateY(-5px); }
+}
 
-    .modal-icon {
-      font-size: 50px;
-      color: var(--c-primary);
-      margin-bottom: 15px;
-    }
+.input-area input[type="text"],
+.input-area input[type="date"],
+.input-area input[type="email"],
+.input-area textarea {
+flex-grow: 1;
+padding: 10px 15px;
+border: none;
+border-radius: 20px;
+background-color: #ffffff;
+min-height: 40px;
+box-sizing: border-box;
+}
+.input-area textarea {
+    border-radius: 10px;
+    min-height: 60px;
+}
 
-    .modal h2 {
-      color: var(--c-primary);
-      margin-top: 0;
-    }
 
-    .modal p {
-      font-size: 16px;
-      line-height: 1.5;
-      color: #333;
-    }
+.input-area button {
+background-color: #006400; /* Warna Tema PAS */
+color: white;
+border: none;
+padding: 10px 15px;
+border-radius: 20px;
+cursor: pointer;
+font-weight: bold;
+transition: background-color 0.2s;
+font-size: 0.9em;
+width: auto;
+height: auto;
+display: inline-block;
+}
 
-    .close-btn {
-      background-color: var(--c-primary);
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .close-btn:hover {
-      background-color: #004d00;
-    }
+.send-button-wa {
+width: 48px !important;
+height: 48px !important;
+border-radius: 50% !important;
+display: flex !important;
+justify-content: center !important;
+align-items: center !important;
+padding: 0 !important;
+font-size: 1.5em !important;
+background-color: #006400 !important; /* Warna Tema PAS */
+}
 
-  </style>
+.choice-button {
+margin-top: 5px;
+flex: 1 1 48%;
+background-color: #f7f7f7 !important;
+color: #000 !important;
+border: 1px solid #ccc !important;
+box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+padding: 8px 10px;
+font-weight: normal;
+text-align: left;
+border-radius: 10px !important;
+}
+.choice-button.selected {
+    background-color: #e0f0e0 !important;
+    border-color: #006400 !important;
+    font-weight: bold;
+}
+.choice-button.red {
+    background-color: #fff0f0 !important;
+    border-color: #d9534f !important;
+    color: #d9534f !important;
+}
+
+@media (max-width: 600px) {
+.chat-container {
+border-radius: 0;
+}
+}
+</style>​-
 </head>
 <body>
 
-  <div class="container">
-    
-    <div class="form-header-image">
-      <img src="https://raw.githubusercontent.com/kamarul95-cloud/hostqamarul/main/Screenshot_15-11-2025_204740_.jpeg" alt="Borang Permohonan Ahli PAS">
-    </div>
+<div class="chat-container">
+<div class="chat-header">
+<div class="profile-pic-placeholder">
+<span style="font-size: 20px;">📝</span>
+</div>
+<div>
+<h2>Pendaftaran Ahli</h2>
+<p class="status">online</p>
+</div>
+</div>
+<div class="chat-box" id="chat-box">
+</div>
 
-    <form id="pendaftaranForm" method="POST">
+<div class="input-area" id="input-area">
+</div>
+</div>
 
-      <fieldset>
-        <legend>A. BUTIR-BUTIR DIRI</legend>
-        <div class="form-section">
+<script>
+// 🔑 URL GOOGLE APPS SCRIPT
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw_ifKoRTR3wxHBMzZPjUIWCTrlZWs7buRB_LMfgDt7zJMZig-SJ-hCbaymPErH85N6zA/exec';
 
-          <div class="form-group">
-            <label for="nama_jawi">1. Nama Penuh (Tulisan Jawi)</label>
-            <input type="text" id="nama_jawi" name="nama_jawi">
-            <p class="help-text">
-              <a href="https://ejawimakmur.my/" target="_blank" rel="noopener noreferrer">
-                Klik di sini untuk menukar nama Rumi ke Jawi
-              </a>
-            </p>
-          </div>
+// ** PEMBOLEH UBAH DATA **
+let step = 0;
+let isProcessing = false;
 
-          <div class="form-group">
-            <label for="nama_rumi">2. Nama Penuh (Tulisan Rumi; ikut Kad Pengenalan)</label>
-            <input type="text" id="nama_rumi" name="nama_rumi">
-          </div>
+let userData = {
+'timestamp': new Date().toLocaleString('ms-MY'),
+'nama_jawi': '', // Dibuat mandatori
+'nama_rumi': '',
+'ic_baru': '',
+'ic_lama': '(Tiada)',
+'tarikh_lahir': '',
+'ic_url': '', 
+'jantina': '',
+'bangsa': 'Melayu',
+'alamat': '',
+'poskod': '',
+'bandar': '',
+'tel_rumah': '(Tiada)',
+'tel_bimbit': '',
+'email': '(Tiada)',
+'kelulusan': '',
+'kelulusan_lain_teks': '',
+'bidang_pengajian': '(Tiada)',
+'pekerjaan': '',
+'bidang_pekerjaan': '',
+'bayaran': [],
+'pengakuan': '',
+'disahkan': '',
+'tarikh_hari_ini': new Date().toISOString().split('T')[0]
+};
 
-          <div class="grid-row grid-col-3">
-            <div class="form-group">
-              <label for="ic_baru">3. No. Kad Pengenalan Baru</label>
-              <input type="text" id="ic_baru" name="ic_baru">
-            </div>
+let tempBayaran = [];
 
-            <div class="form-group">
-              <label for="ic_lama">4. No. Kad Pengenalan Lama</label>
-              <input type="text" id="ic_lama" name="ic_lama">
-            </div>
-            
-            <div class="form-group">
-              <label for="tarikh_lahir">5. Tarikh Lahir</label>
-              <input type="date" id="tarikh_lahir" name="tarikh_lahir" style="padding: 6px 10px;">
-            </div>
-          </div>
-          
-          <div class="form-group" style="margin-top: 16px;">
-            <label for="ic_url">Lampirkan Pautan Gambar IC (Depan & Belakang)</label>
-            
-            <input type="text" id="ic_url" name="ic_url" placeholder="Tampal (Paste) URL gambar IC di sini..." required>
-            
-            <p class="help-text help-text-white">
-              Sila tekan link di bawah untuk ambil gambar & dapatkan URL:
-              <br>
-              <a href="https://scanner-no-kp-by-kamarul-v2.netlify.app/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">
-                📸 Klik Sini: Pengimbas IC & Upload
-              </a>
-              <br>
-              <small>(Ambil gambar > Upload > Salin Link > Tampal di kotak atas)</small>
-            </p>
-          </div>
-          <div class="grid-row grid-col-2" style="margin-top: 16px;">
-            <div class="form-group">
-              <label>6. Jantina</label>
-              <div class="choice-group">
-                <div class="choice-item">
-                  <input type="radio" id="jantina_lelaki" name="jantina" value="Lelaki">
-                  <label for="jantina_lelaki">Lelaki</label>
-                </div>
-                <div class="choice-item">
-                  <input type="radio" id="jantina_perempuan" name="jantina" value="Perempuan">
-                  <label for="jantina_perempuan">Perempuan</label>
-                </div>
-              </div>
-            </div>
+const chatBox = document.getElementById('chat-box');
+const inputArea = document.getElementById('input-area');
+// const typingIndicator = document.getElementById('typing-indicator'); // Tidak relevan lagi
 
-            <div class="form-group">
-              <label for="bangsa">7. Bangsa/Keturunan</label>
-              <input type="text" id="bangsa" name="bangsa">
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="alamat">8. Alamat Surat Menyurat</label>
-            <textarea id="alamat" name="alamat" rows="3"></textarea>
-          </div>
+// ** FUNGSI BANTUAN (KEKALKAN) **
 
-          <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label for="poskod">Poskod</label>
-              <input type="text" id="poskod" name="poskod">
-            </div>
+// === INJECT FIX 1: FUNGSI 'TYPING' BARU ===
+function showTypingIndicator() {
+    // Cipta bubble baru
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'temp-typing-bubble'; // Bagi ID untuk dibuang nanti
+    typingDiv.classList.add('typing-bubble'); // Guna CSS baru
+    typingDiv.innerHTML = `
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    `;
+    chatBox.appendChild(typingDiv); // Masukkan dalam chat-box
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+}
 
-            <div class="form-group">
-              <label for="bandar">Bandar</label>
-              <input type="text" id="bandar" name="bandar">
-            </div>
-          </div>
-
-          <div class="grid-row grid-col-3">
-              <div class="form-group">
-                <label for="tel_bimbit">9. No. Telefon Bimbit</label>
-                <input type="text" id="tel_bimbit" name="tel_bimbit">
-              </div>
-
-              <div class="form-group">
-                <label for="tel_rumah">10. No. Telefon Rumah</label>
-                <input type="text" id="tel_rumah" name="tel_rumah">
-              </div>
-              
-              <div class="form-group">
-                <label for="email">11. Alamat E-mel</label>
-                <input type="email" id="email" name="email">
-              </div>
-          </div>
-          
-          <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label>12. Kelulusan</label>
-              <div class="choice-group">
-                <div class="choice-item">
-                  <input type="radio" id="kelulusan_uni" name="kelulusan" value="Universiti" onclick="toggleKelulusanLain(false)">
-                  <label for="kelulusan_uni">Universiti</label>
-                </div>
-                <div class="lain-lain-group">
-                  <div class="choice-item">
-                    <input type="radio" id="kelulusan_lain" name="kelulusan" value="Lain-lain" onclick="toggleKelulusanLain(true)">
-                    <label for="kelulusan_lain">Lain-lain (Nyatakan):</label>
-                  </div>
-                  <input type="text" id="kelulusan_lain_teks" name="kelulusan_lain_teks" disabled>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="bidang_pengajian">13. Bidang Pengajian</label>
-              <input type="text" id="bidang_pengajian" name="bidang_pengajian">
-            </div>
-          </div>
-          
-          <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label>14. Pekerjaan</label>
-              <div class="choice-group">
-                <div class="choice-item">
-                  <input type="radio" id="kerja_kerajaan" name="pekerjaan" value="Kerajaan">
-                  <label for="kerja_kerajaan">Kerajaan</label>
-                </div>
-                <div class="choice-item">
-                  <input type="radio" id="kerja_swasta" name="pekerjaan" value="Swasta">
-                  <label for="kerja_swasta">Swasta</label>
-                </div>
-                <div class="choice-item">
-                  <input type="radio" id="kerja_sendiri" name="pekerjaan" value="Sendiri">
-                  <label for="kerja_sendiri">Sendiri</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="bidang_pekerjaan">15. Bidang Pekerjaan</label>
-              <input type="text" id="bidang_pekerjaan" name="bidang_pekerjaan">
-            </div>
-          </div>
-          
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>B. BAYARAN</legend>
-        <div class="form-section">
-          <label style="margin-bottom: 12px;">Jenis Bayaran (boleh pilih lebih satu)</label>
-          <div class="choice-group" id="bayaranCheckboxes">
-            <div class="choice-item">
-              <input type="checkbox" id="bayar_daftar" name="bayaran_item[]" value="Pendaftaran: RM 2.00">
-              <label for="bayar_daftar">1. Pendaftaran: RM 2.00</label>
-            </div>
-            <div class="choice-item">
-              <input type="checkbox" id="bayar_tahunan" name="bayaran_item[]" value="Yuran Tahunan: RM 3.00">
-              <label for="bayar_tahunan">2. Yuran Tahunan: RM 3.00</label>
-            </div>
-            <div class="choice-item">
-              <input type="checkbox" id="bayar_sekaligus" name="bayaran_item[]" value="Sekaligus: RM 100.00">
-              <label for="bayar_sekaligus">Sekaligus: RM 100.00</label>
-            </div>
-            <div class="choice-item">
-              <input type="checkbox" id="bayar_kad" name="bayaran_item[]" value="Kad Ahli: RM 5.00">
-              <label for="bayar_kad">3. Kad Ahli: RM 5.00</label>
-            </div>
-          </div>
-
-          <input type="hidden" id="jumlah_bayaran" name="jumlah_bayaran" value="0.00">
-          <input type="hidden" id="no_resit" name="no_resit" value="">
-          
-          <p class="help-text">
-            1. Bayaran Pendaftaran wajib ✅<br>
-            2. Yuran pilih salah satu antara tahunan atau sekaligus<br>
-            3. Kad Ahli pilih jika mahu
-          </p>
-          
-          <p class="help-text help-text-white" style="border: 1px solid var(--c-primary);">
-             💰 **Jumlah Bayaran Dikira:** <span id="totalBayaranDisplay" style="font-weight: 700; color: var(--c-primary);">RM 0.00</span>
-          </p>
-          
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>C. PENGAKUAN PEMOHON</legend>
-        <div class="form-section">
-          <div class="form-group">
-            <label>Pernyataan</label>
-            <p class="help-text" style="background: #fff; border: 1px solid #ccc; padding: 12px; margin-top: 0;">
-              Saya mengaku kebenaran dasar PAS dan akan berusaha melaksanakan segala tuntutannya. Saya menerima PERLEMBAGAAN PAS sebagai panduan dan mengaku akan taat dan patuh kepada kepimpinan parti serta akan patuh dalam melaksanakan arahan-arahan dan keputusan-keputusan parti dari masa ke semasa.
-            </p>
-            <div class="choice-group" style="margin-top: 12px;">
-              <div class="choice-item">
-                <input type="radio" id="setuju" name="pengakuan" value="Saya setuju" required>
-                <label for="setuju" style="font-weight: 600;">Saya bersetuju dengan pengakuan di atas</label>
-              </div>
-            </div>
-          </div>
-          
-          <div class="grid-row grid-col-2" style="margin-top: 24px;">
-            <div class="form-group">
-              <label for="disahkan">Disahkan oleh (Tandatangan Pemohon)</label>
-              <input type="text" id="disahkan" name="disahkan" placeholder="Tampal URL tandatangan digital..." required>
-              <p class="help-text help-text-white">
-                <a href="https://tanda-tangan-by-kamarul.netlify.app/" target="_blank" rel="noopener noreferrer">
-                  Klik di sini untuk Pad Tandatangan Digital
-                </a>
-              </p>
-            </div>
-            
-            <div class="form-group">
-              <label for="tarikh_hari_ini">Tarikh</label>
-              <input type="date" id="tarikh_hari_ini" name="tarikh_hari_ini" style="padding: 6px 10px;" required>
-            </div>
-          </div>
-          
-        </div>
-      </fieldset>
-      
-      <fieldset disabled>
-        <legend>D. CADANGAN DAN SOKONGAN (Untuk Kegunaan Pejabat)</legend>
-        <div class="form-section">
-          <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label>Nama Pencadang:</label>
-              <input type="text" disabled>
-              <label style="margin-top: 8px;">No. Ahli:</label>
-              <input type="text" disabled>
-            </div>
-            <div class="form-group">
-              <label>Tandatangan:</label>
-              <div style="height: 40px; border: 1px solid var(--c-border); background: #eee;"></div>
-              <label style="margin-top: 8px;">Tarikh:</label>
-              <input type="text" disabled>
-            </div>
-          </div>
-          <hr style="border: 0; border-top: 1px solid var(--c-border); margin: 16px 0;">
-          <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label>Nama Penyokong:</label>
-              <input type="text" disabled>
-              <label style="margin-top: 8px;">No. Ahli:</label>
-              <input type="text" disabled>
-            </div>
-            <div class="form-group">
-              <label>Tandatangan:</label>
-              <div style="height: 40px; border: 1px solid var(--c-border); background: #eee;"></div>
-              <label style="margin-top: 8px;">Tarikh:</label>
-              <input type="text" disabled>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      
-      <fieldset disabled>
-        <legend>E. PENERIMAAN (Untuk Kegunaan Pejabat)</legend>
-        <div class="form-section">
-           <div class="grid-row grid-col-2">
-            <div class="form-group">
-              <label>Penerima Cawangan</label>
-              <input type="text" placeholder="Nama Penerima" disabled>
-              <input type="text" placeholder="Tandatangan" style="margin-top: 8px;" disabled>
-            </div>
-            <div class="form-group">
-              <label>Penerima Kawasan</label>
-              <input type="text" placeholder="Nama Penerima" disabled>
-              <input type="text" placeholder="Tandatangan" style="margin-top: 8px;" disabled>
-            </div>
-           </div>
-        </div>
-      </fieldset>
-
-      <button type="submit" class="submit-button" id="submitBtn">
-        Hantar Borang Permohonan
-      </button>
-
-    </form>
-  </div>
-
-  <div id="successModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-icon">✅</div>
-      <h2>Borang Berjaya Diisi!</h2>
-      <p>Terima kasih.</p>
-      <p>Sila jemput ahli keluarga dan rakan-rakan bersama menjadi ahli PAS.</p>
-        <p>Dibina oleh Qamarul.</p>
-      <button class="close-btn" onclick="tutupModal()">Tutup & Kembali</button>
-    </div>
-  </div>
-  
-  <script>
-    /**
-     * Toggle untuk input 'Kelulusan Lain-lain'
-     */
-    function toggleKelulusanLain(enable) {
-      const inputTeks = document.getElementById('kelulusan_lain_teks');
-      if (enable) {
-        inputTeks.disabled = false;
-        inputTeks.focus();
-      } else {
-        inputTeks.disabled = true;
-        inputTeks.value = ''; // Kosongkan jika pilih 'Universiti'
-      }
+function hideTypingIndicator() {
+    const typingDiv = document.getElementById('temp-typing-bubble');
+    if (typingDiv) {
+        typingDiv.remove(); // Buang bubble dari chat-box
     }
-    
-    // Fungsi Tutup Modal
-    function tutupModal() {
-      document.getElementById('successModal').style.display = 'none';
-      // Optional: Reload page atau redirect jika perlu
-      // window.location.reload(); 
+}
+// === AKHIR FIX 1 ===
+
+
+function addMessage(text, type, delay = 500) {
+return new Promise(resolve => {
+setTimeout(() => {
+const formattedText = text
+.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+.replace(/\n/g, '<br>');
+const msgDiv = document.createElement('div');
+msgDiv.classList.add('message', type);
+msgDiv.innerHTML = formattedText;
+chatBox.appendChild(msgDiv);
+chatBox.scrollTop = chatBox.scrollHeight;
+resolve();
+}, delay);
+});
+}
+
+// ** FUNGSI INTEGRASI (DIUBAH SUAI) **
+
+async function sendDataToSheet() {
+console.log("Menghantar data ke Apps Script:", userData);
+const fd = new FormData();
+
+for (const key in userData) {
+    if (key === 'bayaran') {
+        // Diuruskan selepas loop
+    } else if (key === 'tel_bimbit' || key === 'ic_baru' || key === 'poskod' || key === 'ic_lama') {
+        fd.append(key, "'" + userData[key]); // Format Teks
+    } else {
+        fd.append(key, userData[key]);
     }
-    
-    // Helper: extract numeric value from bayaran string like "Pendaftaran: RM 2.00"
-    function extractAmount(value) {
-        const match = value.match(/RM\s*(\d+\.?\d*)/);
-        return match ? parseFloat(match[1]) : 0;
+}
+
+const bayaranString = userData.bayaran.join(', ');
+fd.append('bayaran[]', bayaranString);
+
+// === INJECT FIX 2: LOGIK FALLBACK 'nama_jawi' DIBUANG ===
+// (Tiada lagi 'if' block untuk 'nama_jawi' di sini)
+
+try {
+const response = await fetch(GOOGLE_SHEET_URL, {
+method: 'POST',
+body: fd
+});
+
+if (response.ok) {
+const result = await response.text();
+console.log("Penghantaran berjaya. Respons pelayan:", result);
+return true; // Berjaya
+} else {
+const errorText = await response.text();
+throw new Error(errorText || 'HTTP error ' + response.status);
+}
+} catch (error) {
+console.error("Gagal menghantar data ke Google Sheet:", error);
+alert("⚠️ Ralat: Gagal merekod data ke sheet. Sila semak sambungan internet anda atau konsol (F12).");
+return false; // Gagal
+}
+}
+
+
+// ** FUNGSI UTAMA CHATBOT (FLOW BARU YANG DIBETULKAN) **
+
+async function runChatFlow() {
+if (isProcessing) return;
+isProcessing = true;
+inputArea.innerHTML = '';
+
+if (step > 0) {
+showTypingIndicator(); // Panggil fungsi baru
+await new Promise(r => setTimeout(r, 1200));
+hideTypingIndicator(); // Panggil fungsi baru
+}
+
+switch (step) {
+case 0:
+await addMessage('Assalamualaikum! Selamat datang ke borang pendaftaran ahli versi chatbot.', 'bot-message');
+await addMessage('Saya akan bantu anda isi borang ini satu per satu.', 'bot-message');
+await addMessage('**Bahagian A: Butir Diri**\n\n1. Sila masukkan **Nama Penuh (Tulisan Jawi)**.', 'bot-message');
+await addMessage('Guna pautan ini untuk tukar Rumi ke Jawi:\n<a href="https://ejawimakmur.my/" target="_blank" rel="noopener noreferrer">➡️ Klik Sini: eJawiMakmur.my</a>', 'bot-message');
+// === INJECT FIX 2: BUTANG 'LANGKAU' DIBUANG ===
+inputArea.innerHTML = `
+<input type="text" id="nama_jawi_input" placeholder="Nama Jawi..." class="form-input">
+<button onclick="submitText('nama_jawi', 'nama_jawi_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('nama_jawi_input').focus();
+break;
+
+case 1:
+await addMessage('2. Sila masukkan **Nama Penuh (Tulisan Rumi)** anda (mengikut Kad Pengenalan).', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="nama_rumi_input" placeholder="Nama Penuh Rumi..." class="form-input">
+<button onclick="submitText('nama_rumi', 'nama_rumi_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('nama_rumi_input').focus();
+break;
+
+case 2:
+await addMessage('3. Sila masukkan **No. Kad Pengenalan Baru** anda (cth: 900101-11-5555).', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="ic_baru_input" placeholder="No. KP Baru..." class="form-input">
+<button onclick="submitText('ic_baru', 'ic_baru_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('ic_baru_input').focus();
+break;
+
+case 3:
+await addMessage('4. **Tarikh Lahir** anda.', 'bot-message');
+inputArea.innerHTML = `
+<input type="date" id="tarikh_lahir_input" class="form-input" style="padding: 6px 10px;">
+<button onclick="submitText('tarikh_lahir', 'tarikh_lahir_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('tarikh_lahir_input').focus();
+break;
+
+case 4:
+await addMessage('5. **Jantina** anda.', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="submitChoice('jantina', 'Lelaki')">Lelaki</button>
+<button class="choice-button" onclick="submitChoice('jantina', 'Perempuan')">Perempuan</button>
+`;
+break;
+
+case 5:
+await addMessage('6. Sila dapatkan **Pautan Gambar IC** anda.', 'bot-message');
+await addMessage('Sila guna aplikasi pengimbas IC di bawah untuk ambil gambar & dapatkan URL:\n\n<a href="https://scanner-no-kp-by-kamarul.netlify.app/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">📸 Klik Sini: Pengimbas IC & Upload</a>', 'bot-message');
+await addMessage('Selepas dapat URL, sila **tampal (paste)** pautan itu di ruangan bawah.', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="ic_url_input" placeholder="Tampal URL dari pengimbas di sini..." class="form-input">
+<button onclick="submitText('ic_url', 'ic_url_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('ic_url_input').focus();
+break;
+
+case 6:
+await addMessage('7. Sila masukkan **Alamat Surat Menyurat** penuh anda.', 'bot-message');
+inputArea.innerHTML = `
+<textarea id="alamat_input" placeholder="Alamat penuh..." rows="2"></textarea>
+<button onclick="submitText('alamat', 'alamat_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('alamat_input').focus();
+break;
+
+case 7:
+await addMessage('8. **Poskod**.', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="poskod_input" placeholder="Poskod..." class="form-input">
+<button onclick="submitText('poskod', 'poskod_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('poskod_input').focus();
+break;
+
+case 8:
+await addMessage('9. **Bandar**.', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="bandar_input" placeholder="Bandar..." class="form-input">
+<button onclick="submitText('bandar', 'bandar_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('bandar_input').focus();
+break;
+
+case 9:
+await addMessage('10. **No. Telefon Bimbit** (WhatsApp).', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="tel_bimbit_input" placeholder="01x-xxxxxxx" class="form-input">
+<button onclick="submitText('tel_bimbit', 'tel_bimbit_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('tel_bimbit_input').focus();
+break;
+
+case 10:
+await addMessage('11. **Kelulusan** tertinggi.', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="submitChoice('kelulusan', 'Universiti')">Universiti / Kolej</button>
+<button class="choice-button" onclick="handleKelulusanLain()">Lain-lain (Nyatakan)</button>
+`;
+break;
+
+case 11:
+await addMessage('Sila nyatakan kelulusan lain-lain anda (cth: SPM, STPM, Diploma).', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="kelulusan_lain_input" placeholder="Nyatakan kelulusan..." class="form-input">
+<button onclick="submitKelulusanLain()" class="send-button-wa">➤</button>
+`;
+document.getElementById('kelulusan_lain_input').focus();
+break;
+
+case 12:
+await addMessage('12. **Pekerjaan**.', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="submitChoice('pekerjaan', 'Kerajaan')">Kerajaan</button>
+<button class="choice-button" onclick="submitChoice('pekerjaan', 'Swasta')">Swasta</button>
+<button class="choice-button" onclick="submitChoice('pekerjaan', 'Sendiri')">Bekerja Sendiri</button>
+<button class="choice-button" onclick="submitChoice('pekerjaan', 'Lain-lain')">Lain-lain (Pelajar/Suri Rumah dsb)</button>
+`;
+break;
+
+case 13:
+await addMessage('13. Sila nyatakan **Bidang Pekerjaan** anda.', 'bot-message');
+await addMessage('(Contoh: Guru, Jurutera IT, Peniaga, Pelajar)', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="bidang_pekerjaan_input" placeholder="Bidang pekerjaan..." class="form-input">
+<button onclick="submitText('bidang_pekerjaan', 'bidang_pekerjaan_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('bidang_pekerjaan_input').focus();
+break;
+
+case 14:
+await addMessage('**Bahagian B: Bayaran**\n\nSila pilih jenis bayaran. Anda boleh pilih lebih dari satu.', 'bot-message');
+await addMessage('1. Pendaftaran: RM 2.00 (Wajib)\n2. Yuran: Tahunan (RM 3.00) ATAU Sekaligus (RM 100.00)\n3. Kad Ahli: RM 5.00 (Pilihan)', 'bot-message');
+tempBayaran = [];
+inputArea.innerHTML = `
+<button id="btn_bayar_daftar" class="choice-button" onclick="toggleBayaran('Pendaftaran: RM 2.00', 'btn_bayar_daftar')">1. Pendaftaran (RM 2.00)</button>
+<button id="btn_bayar_tahunan" class="choice-button" onclick="toggleBayaran('Yuran Tahunan: RM 3.00', 'btn_bayar_tahunan', 'bayar_yuran')">2. Yuran Tahunan (RM 3.00)</button>
+<button id="btn_bayar_sekaligus" class="choice-button" onclick="toggleBayaran('Sekaligus: RM 100.00', 'btn_bayar_sekaligus', 'bayar_yuran')">2. Yuran Sekaligus (RM 100.00)</button>
+<button id="btn_bayar_kad" class="choice-button" onclick="toggleBayaran('Kad Ahli: RM 5.00', 'btn_bayar_kad')">3. Kad Ahli (RM 5.00)</button>
+<button onclick="submitBayaran()" style="width: 100%; margin-top: 10px;">Sahkan Pilihan Bayaran</button>
+`;
+break;
+
+case 15:
+await addMessage('**Bahagian C: Pengakuan Pemohon**\n\nSila baca dan setuju dengan pernyataan di bawah:', 'bot-message');
+await addMessage('*"Saya mengaku kebenaran dasar PAS dan akan berusaha melaksanakan segala tuntutannya. Saya menerima PERLEMBAGAAN PAS sebagai panduan dan mengaku akan taat dan patuh kepada kepimpinan parti serta akan patuh dalam melaksanakan arahan-arahan dan keputusan-keputusan parti dari masa ke semasa."*', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="submitChoice('pengakuan', 'Saya setuju')">Saya Bersetuju</button>
+<button class="choice-button red" onclick="submitChoice('pengakuan', 'Tidak setuju')">Saya Tidak Bersetuju</button>
+`;
+break;
+
+case 16:
+await addMessage('14. Sila dapatkan **Pautan Tandatangan Digital** anda.', 'bot-message');
+await addMessage('Sila guna aplikasi di bawah untuk tanda tangan & dapatkan URL:\n\n<a href="https://tanda-tangan-by-kamarul.netlify.app/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">✍️ Klik Sini: Pad Tandatangan Digital</a>', 'bot-message');
+await addMessage('Selepas dapat URL, sila **tampal (paste)** pautan itu di ruangan bawah.', 'bot-message');
+inputArea.innerHTML = `
+<input type="text" id="disahkan_input" placeholder="Tampal URL dari pad t/tangan..." class="form-input">
+<button onclick="submitText('disahkan', 'disahkan_input')" class="send-button-wa">➤</button>
+`;
+document.getElementById('disahkan_input').focus();
+break;
+
+case 17:
+await addMessage('**PENGESAHAN AKHIR**\n\nSila semak butiran anda sebelum hantar:', 'bot-message');
+let summary = `
+**Nama Jawi**: ${userData.nama_jawi}
+**Nama Rumi**: ${userData.nama_rumi}
+**No. KP**: ${userData.ic_baru}
+**Tarikh Lahir**: ${userData.tarikh_lahir}
+**Jantina**: ${userData.jantina}
+**Telefon**: ${userData.tel_bimbit}
+**Alamat**: ${userData.alamat}, ${userData.poskod} ${userData.bandar}
+**Kelulusan**: ${userData.kelulusan === 'Lain-lain' ? userData.kelulusan_lain_teks : userData.kelulusan}
+**Pekerjaan**: ${userData.pekerjaan}
+**Bidang**: ${userData.bidang_pekerjaan || '(Tidak dinyatakan)'}
+**Bayaran**: ${userData.bayaran.join(', ') || '(Belum dipilih)'}
+**Pautan IC**: ${userData.ic_url ? `<a href="${userData.ic_url}" target="_blank">Lihat Pautan</a>` : 'Belum diisi'}
+**Pautan T/T**: ${userData.disahkan ? `<a href="${userData.disahkan}" target="_blank">Lihat Pautan</a>` : 'Belum diisi'}
+`;
+await addMessage(summary, 'bot-message');
+await addMessage('Adakah semua maklumat ini **BETUL**?', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="confirmPendaftaran(true)">✅ Ya, Betul & Hantar</button>
+<button class="choice-button red" onclick="confirmPendaftaran(false)">❌ Tidak, Mula Semula</button>
+`;
+break;
+
+case 18:
+await addMessage('✅ **Borang Berjaya Diisi!**', 'bot-message');
+await addMessage('Terima kasih.', 'bot-message');
+await addMessage('Sila jemput ahli keluarga dan rakan-rakan bersama menjadi ahli PAS.', 'bot-message');
+await addMessage('Dibina oleh Qamarul.', 'bot-message');
+inputArea.innerHTML = `
+<button class="choice-button" onclick="confirmPendaftaran(false)">Isi Borang Baru</button>
+`;
+break;
+}
+isProcessing = false;
+}
+
+// ** FUNGSI PENGENDALIAN INPUT (BARU) **
+
+function submitText(key, inputId) {
+if (isProcessing) return;
+const input = document.getElementById(inputId);
+const value = input.value.trim();
+
+// === INJECT FIX 2: Validasi 'nama_jawi' ===
+if (!value) {
+    alert('Sila isi ruangan ini. Ia wajib diisi.');
+    input.focus();
+    return;
+}
+// === AKHIR FIX 2 ===
+
+if (key === 'ic_baru' && !/^[0-9]{6}-?[0-9]{2}-?[0-9]{4}$/.test(value)) {
+    alert('Sila masukkan format No. KP yang betul (cth: 900101-11-5555 atau 900101115555)');
+    input.focus();
+    return;
+}
+if (key === 'tel_bimbit' && !/^[0-9\s-]{7,15}$/.test(value)) {
+    alert('Sila masukkan nombor telefon yang sah.');
+    input.focus();
+    return;
+}
+if ((key === 'ic_url' || key === 'disahkan') && !(value.startsWith('http://') || value.startsWith('https://'))) {
+    alert('Sila tampal pautan (URL) yang sah bermula dengan http:// atau https://');
+    input.focus();
+    return;
+}
+
+let
+ cleanedValue = value;
+if (key === 'ic_baru') {
+    cleanedValue = value.replace(/-/g, '');
+    if (cleanedValue.length === 12) {
+        cleanedValue = `${cleanedValue.substr(0, 6)}-${cleanedValue.substr(6, 2)}-${cleanedValue.substr(8, 4)}`;
     }
+}
+
+userData[key] = cleanedValue;
+addMessage(cleanedValue, 'user-message', 10);
+step++;
+runChatFlow();
+}
+
+function submitChoice(key, value) {
+if (isProcessing) return;
+
+userData[key] = value;
+addMessage(value, 'user-message', 10); // Logik 'skip' dibuang
+
+if (key === 'pengakuan' && value === 'Tidak setuju') {
+addMessage('Anda mesti bersetuju dengan pengakuan untuk meneruskan pendaftaran.', 'bot-message').then(() => {
+step = 0;
+resetUserData();
+runChatFlow();
+});
+return;
+}
+
+step++;
+runChatFlow();
+}
+
+function handleKelulusanLain() {
+if (isProcessing) return;
+addMessage('Lain-lain (Nyatakan)', 'user-message', 10);
+userData['kelulusan'] = 'Lain-lain';
+step = 11;
+runChatFlow();
+}
+
+function submitKelulusanLain() {
+if (isProcessing) return;
+const input = document.getElementById('kelulusan_lain_input');
+const value = input.value.trim();
+if (!value) { alert('Sila nyatakan kelulusan anda.'); input.focus(); return; }
+
+userData['kelulusan_lain_teks'] = value;
+addMessage(value, 'user-message', 10);
+step = 12;
+runChatFlow();
+}
+
+// Fungsi Bahagian B (Bayaran)
+function toggleBayaran(value, buttonId, group = null) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return; 
     
-    // Helper: Calculate and display total payment
-    function calculateTotalPayment() {
-        const checkboxes = document.querySelectorAll('#bayaranCheckboxes input[type="checkbox"]:checked');
-        let total = 0;
-        checkboxes.forEach(cb => {
-            total += extractAmount(cb.value);
-        });
-        
-        // Update hidden field and display field
-        document.getElementById('jumlah_bayaran').value = total.toFixed(2);
-        document.getElementById('totalBayaranDisplay').textContent = 'RM ' + total.toFixed(2);
-    }
+    const index = tempBayaran.indexOf(value);
 
+    if (group === 'bayar_yuran') {
+        const lainValue = value.includes('Tahunan') ? 'Sekaligus: RM 100.00' : 'Yuran Tahunan: RM 3.00';
+        const lainBtnId = value.includes('Tahunan') ? 'btn_bayar_sekaligus' : 'btn_bayar_tahunan';
+        const btnLain = document.getElementById(lainBtnId);
+        const indexLain = tempBayaran.indexOf(lainValue);
 
-    /* ============================
-        Frontend submit -> Google Apps Script Web App
-        ============================ */
-    (function () {
-      const webAppUrl = "https://script.google.com/macros/s/AKfycbw_ifKoRTR3wxHBMzZPjUIWCTrlZWs7buRB_LMfgDt7zJMZig-SJ-hCbaymPErH85N6zA/exec";
-      const form = document.getElementById('pendaftaranForm');
-      const submitBtn = document.getElementById('submitBtn');
-      const modal = document.getElementById('successModal');
-
-      // Array of field names that should be prefixed with "'" for text formatting in Google Sheet
-      const numberFieldsToFormat = [
-        'ic_baru', 'ic_lama', 'tel_rumah', 'tel_bimbit', 'poskod'
-      ];
-      
-      // Helper: collect form data, format numbers, and calculate total payment
-      function collectFormDataAsFormData(formElement) {
-        const fd = new FormData();
-        const elements = formElement.elements;
-        const bayaranValues = [];
-        let totalPayment = 0; // Sebenarnya sudah dikira di calculateTotalPayment, tapi kita kira semula untuk kepastian
-        
-        // Get total payment from hidden field (already calculated)
-        totalPayment = parseFloat(document.getElementById('jumlah_bayaran').value) || 0;
-
-        for (let i = 0; i < elements.length; i++) {
-          const el = elements[i];
-          if (!el.name || el.disabled) continue;
-
-          if (el.type === 'checkbox' && el.name === 'bayaran_item[]') {
-            if (el.checked) {
-              // 3. Logik untuk Bayaran (Simpan jenis bayaran sahaja)
-              bayaranValues.push(el.value);
+        if (index > -1) {
+            tempBayaran.splice(index, 1);
+            btn.classList.remove('selected');
+        } else {
+            tempBayaran.push(value);
+            btn.classList.add('selected');
+            if (indexLain > -1) {
+                tempBayaran.splice(indexLain, 1);
+                if(btnLain) btnLain.classList.remove('selected');
             }
-          } else if (el.type === 'radio') {
-            if (el.checked) {
-              fd.append(el.name, el.value);
-            }
-          } else if (el.name !== 'bayaran_item[]' && el.name !== 'jumlah_bayaran') {
-             // Append other fields normally, except the checkbox items and hidden total field
-            let value = el.value.trim();
-
-            // 1. Format Nombor/ID dengan simbol '
-            if (numberFieldsToFormat.includes(el.name) && value) {
-              value = "'" + value;
-            }
-
-            fd.append(el.name, value);
-          }
         }
-        
-        // 3. Tambah Jumlah Bayaran dan senarai jenis bayaran yang dipisahkan oleh pipe
-        fd.append('jumlah_bayaran', totalPayment.toFixed(2));
-        fd.append('bayaran', bayaranValues.join(' , ')); // Satu field 'bayaran' untuk semua jenis bayaran
-
-        return fd;
-      }
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Basic validation
-        const namaRumi = form.querySelector('[name="nama_rumi"]');
-        const icUrl = form.querySelector('[name="ic_url"]');
-        const setuju = form.querySelector('[name="pengakuan"]:checked');
-        const tandatangan = form.querySelector('[name="disahkan"]');
-        const tarikh = form.querySelector('[name="tarikh_hari_ini"]');
-        
-        if (namaRumi.value.trim() === "") {
-          alert("Sila isi Nama Penuh (Rumi).");
-          namaRumi.focus();
-          return;
+    } else {
+        if (index > -1) {
+            tempBayaran.splice(index, 1);
+            btn.classList.remove('selected');
+        } else {
+            tempBayaran.push(value);
+            btn.classList.add('selected');
         }
-        
-        if (icUrl.value.trim() === "") {
-           alert("Sila tampal URL gambar IC.");
-           icUrl.focus();
-           return;
-        }
-        
-        if (!setuju) {
-            alert("Sila tandakan kotak pengakuan pemohon.");
-            return;
-        }
+    }
+}
 
-        if (tandatangan.value.trim() === "") {
-            alert("Sila tampal URL Tandatangan Digital.");
-            tandatangan.focus();
-            return;
-        }
+function submitBayaran() {
+if (isProcessing) return;
+const adaDaftar = tempBayaran.some(v => v.includes('Pendaftaran'));
+const adaYuran = tempBayaran.some(v => v.includes('Tahunan') || v.includes('Sekaligus'));
 
-        if (tarikh.value.trim() === "") {
-            alert("Sila masukkan Tarikh hari ini.");
-            tarikh.focus();
-            return;
-        }
-        
+if (!adaDaftar) {
+alert('Sila pilih bayaran "Pendaftaran (RM 2.00)". Ia wajib.');
+return;
+}
+if (!adaYuran) {
+alert('Sila pilih salah satu yuran (Tahunan atau Sekaligus).');
+return;
+}
 
-        // Disable button semasa menghantar
-        submitBtn.disabled = true;
-        const originalBtnText = submitBtn.innerHTML;
-        submitBtn.innerHTML = "Menghantar...";
+userData['bayaran'] = tempBayaran;
+addMessage(`Bayaran: ${tempBayaran.join(', ')}`, 'user-message', 10);
+step++;
+runChatFlow();
+}
 
-        const fd = collectFormDataAsFormData(form);
 
-        fetch(webAppUrl, {
-          method: "POST",
-          body: fd
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.json().catch(() => response.text());
-          } else {
-            return response.text().then(txt => { throw new Error(txt || 'HTTP error ' + response.status); });
-          }
-        })
-        .then(result => {
-          // Berjaya - Tunjuk Modal (Ganti Alert)
-          modal.style.display = 'flex';
-          
-          form.reset();
-          toggleKelulusanLain(false);
-          calculateTotalPayment(); // Reset total payment display
-        })
-        .catch(err => {
-          console.error("Hantar gagal:", err);
-          alert("Maaf, penghantaran gagal. Sila semak sambungan internet.");
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
-        });
-      });
-      
-      // Event Listeners for Bayaran Calculation
-      const bayaranCheckboxes = document.querySelectorAll('#bayaranCheckboxes input[type="checkbox"]');
-      bayaranCheckboxes.forEach(cb => {
-          cb.addEventListener('change', calculateTotalPayment);
-      });
-      
-      // Initial setup
-      document.addEventListener('DOMContentLoaded', function() {
-        toggleKelulusanLain(false);
-        calculateTotalPayment(); // Calculate initial total (should be 0.00)
-      });
-      
-    })();
-  </script>
+// --- Fungsi Pengesahan Akhir ---
+async function confirmPendaftaran(isConfirmed) {
+if (isProcessing) return;
+isProcessing = true;
+
+if (isConfirmed) {
+addMessage('✅ Ya, Betul & Hantar', 'user-message', 10);
+showTypingIndicator();
+const success = await sendDataToSheet();
+hideTypingIndicator();
+
+if (success) {
+step = 18; // Pergi ke skrin 'Selesai'
+isProcessing = false; // <-- INI KUNCI DIA, LEPAS 'LOCK'
+runChatFlow(); // Panggil runChatFlow untuk tunjuk 'case 18'
+} else {
+addMessage('Maaf, penghantaran gagal. Sila cuba lagi.', 'bot-message');
+isProcessing = false;
+}
+
+} else {
+// Mula semula
+addMessage('❌ Tidak, Mula Semula', 'user-message', 10);
+resetUserData();
+step = 0;
+await addMessage('Baik, kita mulakan semula dari awal.', 'bot-message', 500);
+isProcessing = false;
+runChatFlow();
+}
+}
+
+// Fungsi untuk reset data
+function resetUserData() {
+const timestamp = new Date().toLocaleString('ms-MY');
+const tarikh_hari_ini = new Date().toISOString().split('T')[0];
+    
+userData = {
+'timestamp': timestamp,
+'nama_jawi': '', // Dikosongkan
+'nama_rumi': '',
+'ic_baru': '',
+'ic_lama': '(Tiada)',
+'tarikh_lahir': '',
+'ic_url': '',
+'jantina': '',
+'bangsa': 'Melayu',
+'alamat': '',
+'poskod': '',
+'bandar': '',
+'tel_rumah': '(Tiada)',
+'tel_bimbit': '',
+'email': '(Tiada)',
+'kelulusan': '',
+'kelulusan_lain_teks': '',
+'bidang_pengajian': '(Tiada)',
+'pekerjaan': '',
+'bidang_pekerjaan': '',
+'bayaran': [],
+'pengakuan': '',
+'disahkan': '',
+'tarikh_hari_ini': tarikh_hari_ini
+};
+tempBayaran = [];
+}
+
+// ** INICIALISASI **
+window.onload = function() {
+runChatFlow();
+};
+</script>
 
 </body>
-</html>----
+</html>-----
