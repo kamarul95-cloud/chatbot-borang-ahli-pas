@@ -140,26 +140,19 @@ align-items: flex-end;
     box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
 }
 
-/* === INJECT FIX 3: GAYA 'KREDIT' BARU === */
 .credit-message {
     background-color: transparent;
     box-shadow: none;
-    /* Letak di tengah */
-    margin: 15px auto 10px auto; /* auto left/right centers it */
+    margin: 15px auto 10px auto;
     text-align: center;
-    /* Gaya teks */
     font-size: 0.8em;
     color: #555;
     font-style: italic;
-    /* Boleh tambah border jika mahu */
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     padding: 5px 10px;
-    max-width: 80%; /* Biar nampak kemas */
-    /* 'max-width' pada .message tidak terpakai sebab kita tak guna class .message */
+    max-width: 80%;
 }
-/* === AKHIR FIX 3 === */
-
 
 .dot {
 height: 6px;
@@ -283,7 +276,7 @@ let isProcessing = false;
 
 let userData = {
 'timestamp': new Date().toLocaleString('ms-MY'),
-'nama_jawi': '', // Dibuat mandatori
+'nama_jawi': '',
 'nama_rumi': '',
 'ic_baru': '',
 'ic_lama': '(Tiada)',
@@ -313,7 +306,7 @@ let tempBayaran = [];
 const chatBox = document.getElementById('chat-box');
 const inputArea = document.getElementById('input-area');
 
-// ** FUNGSI BANTUAN (KEKALKAN) **
+// ** FUNGSI BANTUAN **
 
 function showTypingIndicator() {
     const typingDiv = document.createElement('div');
@@ -335,7 +328,6 @@ function hideTypingIndicator() {
     }
 }
 
-// === INJECT FIX 3: FUNGSI 'addMessage' DIUBAH SUAI ===
 function addMessage(text, typeOrClass, delay = 500) {
 return new Promise(resolve => {
 setTimeout(() => {
@@ -344,11 +336,9 @@ const formattedText = text
 .replace(/\n/g, '<br>');
 const msgDiv = document.createElement('div');
 
-// Tambah kelas 'message' hanya jika ia bubble biasa
 if (typeOrClass === 'bot-message' || typeOrClass === 'user-message') {
     msgDiv.classList.add('message');
 }
-// Tambah apa jua kelas yang diberi (cth: bot-message, user-message, ATAU credit-message)
 msgDiv.classList.add(typeOrClass); 
 
 msgDiv.innerHTML = formattedText;
@@ -358,9 +348,8 @@ resolve();
 }, delay);
 });
 }
-// === AKHIR FIX 3 ===
 
-// ** FUNGSI INTEGRASI (DIUBAH SUAI) **
+// ** FUNGSI INTEGRASI **
 
 async function sendDataToSheet() {
 console.log("Menghantar data ke Apps Script:", userData);
@@ -369,9 +358,13 @@ const fd = new FormData();
 for (const key in userData) {
     if (key === 'bayaran') {
         // Diuruskan selepas loop
-    } else if (key === 'tel_bimbit' || key === 'ic_baru' || key === 'poskod' || key === 'ic_lama') {
+    
+    // === INJECT DEBUG FIX: 'poskod' DIKELUARKAN DARI BLOK INI ===
+    } else if (key === 'tel_bimbit' || key === 'ic_baru' || key === 'ic_lama') {
+    // === AKHIR FIX ===
         fd.append(key, "'" + userData[key]); // Format Teks
     } else {
+        // 'poskod' kini akan jatuh ke blok 'else' ini dan dihantar sebagai data biasa
         fd.append(key, userData[key]);
     }
 }
@@ -401,7 +394,7 @@ return false; // Gagal
 }
 
 
-// ** FUNGSI UTAMA CHATBOT (FLOW BARU YANG DIBETULKAN) **
+// ** FUNGSI UTAMA CHATBOT **
 
 async function runChatFlow() {
 if (isProcessing) return;
@@ -463,11 +456,9 @@ inputArea.innerHTML = `
 break;
 
 case 5:
-// === INJECT FIX 1: LINK SCANNER V2 BARU ===
 await addMessage('6. Sila dapatkan **Pautan Gambar IC** anda.', 'bot-message');
 await addMessage('Sila guna aplikasi pengimbas IC di bawah untuk ambil gambar & dapatkan URL:\n\n<a href="https://kamarul95-cloud.github.io/scanner-no-kp-v2/" target="_blank" rel="noopener noreferrer" style="font-size: 1.1em; font-weight:bold;">📸 Klik Sini: Pengimbas IC & Upload (V2)</a>', 'bot-message');
 await addMessage('Selepas dapat URL, sila **tampal (paste)** pautan itu di ruangan bawah.', 'bot-message');
-// === AKHIR FIX 1 ===
 inputArea.innerHTML = `
 <input type="text" id="ic_url_input" placeholder="Tampal URL dari pengimbas di sini..." class="form-input">
 <button onclick="submitText('ic_url', 'ic_url_input')" class="send-button-wa">➤</button>
@@ -610,9 +601,7 @@ case 18:
 await addMessage('✅ **Borang Berjaya Diisi!**', 'bot-message');
 await addMessage('Terima kasih.', 'bot-message');
 await addMessage('Sila jemput ahli keluarga dan rakan-rakan bersama menjadi ahli PAS.', 'bot-message');
-// === INJECT FIX 3: Mesej Kredit Khas ===
 await addMessage('Dibina oleh Qamarul', 'credit-message', 1000); 
-// === AKHIR FIX 3 ===
 inputArea.innerHTML = `
 <button class="choice-button" onclick="confirmPendaftaran(false)">Isi Borang Baru</button>
 `;
@@ -621,7 +610,7 @@ break;
 isProcessing = false;
 }
 
-// ** FUNGSI PENGENDALIAN INPUT (BARU) **
+// ** FUNGSI PENGENDALIAN INPUT **
 
 function submitText(key, inputId) {
 if (isProcessing) return;
@@ -772,7 +761,7 @@ hideTypingIndicator();
 
 if (success) {
 step = 18;
-isProcessing = false; // KUNCI
+isProcessing = false;
 runChatFlow();
 } else {
 addMessage('Maaf, penghantaran gagal. Sila cuba lagi.', 'bot-message');
@@ -797,7 +786,7 @@ const tarikh_hari_ini = new Date().toISOString().split('T')[0];
     
 userData = {
 'timestamp': timestamp,
-'nama_jawi': '', // Dikosongkan
+'nama_jawi': '',
 'nama_rumi': '',
 'ic_baru': '',
 'ic_lama': '(Tiada)',
